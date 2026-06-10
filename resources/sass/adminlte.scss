@@ -1,0 +1,29 @@
+// Fontawesome
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+// AdminLTE
+@import 'admin-lte/dist/css/adminlte.min.css';
+
+// Personnalisation
+:root {
+    --primary: #ff6c00;
+    --primary-dark: #e05a00;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ff6c00 !important;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #ff6c00 !important;
+}
+
+.btn-primary {
+    background-color: #ff6c00 !important;
+    border-color: #ff6c00 !important;
+}
+
+.btn-primary:hover {
+    background-color: #e05a00 !important;
+    border-color: #e05a00 !important;
+}
