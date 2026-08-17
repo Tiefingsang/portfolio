@@ -21,23 +21,29 @@ class BlogController extends Controller
         return view('admin.blog.create');
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
+
+
+        // Validation avec taille max 20MB
         $request->validate([
             'title' => 'required|max:255',
             'excerpt' => 'required|max:500',
             'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10048',
-            'is_published' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480', // 20MB = 20480KB
         ]);
 
+         //dd($request->all());
+
+        // Déterminer si c'est une publication ou un brouillon
+        $isPublished = $request->has('is_published') && !$request->has('save_draft');
+
+        // Préparer les données
         $data = [
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'excerpt' => $request->excerpt,
             'content' => $request->content,
-            'is_published' => $request->has('is_published'),
-            'published_at' => $request->has('is_published') ? now() : null,
             'meta_description' => Str::limit($request->excerpt, 160),
         ];
 
@@ -49,9 +55,13 @@ class BlogController extends Controller
             $data['image'] = $imagePath;
         }
 
+        // Création de l'article
         BlogPost::create($data);
 
-        return redirect()->route('admin.blog.index')->with('success', 'Article créé avec succès');
+        // Message de succès
+        $message = $request->has('save_draft') ? 'Brouillon enregistré avec succès' : 'Article publié avec succès';
+
+        return redirect()->route('admin.blog.index')->with('success', $message);
     }
 
     public function show($id)

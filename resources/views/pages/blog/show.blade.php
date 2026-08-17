@@ -1,14 +1,19 @@
 @extends('layouts.app')
 
-@section('title', $post->title . ' - Blog')
-@section('meta_description', Str::limit($post->excerpt ?? $post->meta_description, 150))
+@section('title', $post->title . ' - Blog Tiefing Sangare')
+@section('meta_description', Str::limit($post->excerpt ?? $post->meta_description ?? $post->content, 160))
 
 @section('content')
 <div class="section started-blog">
     <div class="slide" style="background-image: url({{ asset('images/slide-bg-1.jpg') }});"></div>
     <div class="centrize full-width">
         <div class="vertical-center">
-            <div class="st-title align-center">Blog Post</div>
+            <div class="st-title align-center">
+                <span style="font-size: 14px; display: block; margin-bottom: 10px;">
+                    {{ $post->published_at ? $post->published_at->format('d F Y') : date('d F Y') }}
+                </span>
+                Blog Post
+            </div>
         </div>
     </div>
 </div>
