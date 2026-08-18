@@ -23,16 +23,17 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'title' => 'required|max:255',
             'icon' => 'nullable|max:50',
             'description' => 'required',
             'full_description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20048',
             'order' => 'integer',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
-            'features' => 'nullable|array',
+            'features' => 'nullable|string',
             'button_text' => 'nullable|max:50',
             'button_link' => 'nullable|url',
         ]);
@@ -92,7 +93,7 @@ class ServiceController extends Controller
             'order' => 'integer',
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
-            'features' => 'nullable|array',
+            'features' => 'nullable|string',
             'button_text' => 'nullable|max:50',
             'button_link' => 'nullable|url',
         ]);
