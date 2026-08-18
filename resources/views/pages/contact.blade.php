@@ -101,13 +101,7 @@
                             <textarea name="message" placeholder="Votre message *" required rows="6">{{ old('message') }}</textarea>
                         </div>
                     </div>
-                    <!-- Ajouter Google reCAPTCHA -->
-                    {{-- <div class="col col-m-12 col-t-12 col-d-12 animated">
-                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                        @error('g-recaptcha-response')
-                            <span class="text-danger" style="color: red; font-size: 12px;">{{ $message }}</span>
-                        @enderror
-                    </div> --}}
+
                     <div class="col col-m-12 col-t-12 col-d-12 animated">
                         <button type="submit" class="btn" id="submit-btn">
                             <span>Envoyer le message</span>

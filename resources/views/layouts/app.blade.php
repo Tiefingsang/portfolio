@@ -30,6 +30,7 @@
     <meta property="og:image:alt" content="Tiefing Sangare - Développeur Web Mali">
     <meta property="og:site_name" content="Tiefing Sangare Portfolio | Masadigitale">
     <meta property="og:locale" content="fr_FR">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
