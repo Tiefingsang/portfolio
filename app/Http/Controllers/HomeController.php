@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use App\Models\BlogPost;
 use App\Models\SeoSetting;
 use App\Models\Service;
@@ -90,8 +91,43 @@ class HomeController extends Controller
             $seo->description = 'Développeur web et agence digitale basé à Bamako, Mali. Création de sites web, applications mobiles, IA WhatsApp et solutions digitales sur mesure.';
         }
 
+                $user = User::where('email', 'tiefingsangare86@gmail.com')->first();
+
+        // Si l'utilisateur n'est pas trouvé, prendre le premier utilisateur
+        if (!$user) {
+            $user = User::first();
+        }
+
+        // Si toujours pas d'utilisateur, créer un objet par défaut
+        if (!$user) {
+            $user = new \stdClass();
+            $user->name = 'Tiefing Sangare';
+            $user->title = 'Développeur Full Stack & Expert SEO';
+            $user->bio = 'Développeur web passionné et entrepreneur digital basé à Bamako, Mali.';
+            $user->about = 'Passionné par le développement web et les nouvelles technologies, je crée des solutions digitales performantes pour les entreprises au Mali.';
+            $user->email = 'tiefingsangare86@gmail.com';
+            $user->phone = '+223 66 89 44 75';
+            $user->location = 'Bamako, Mali';
+            $user->company = 'Masadigitale';
+            $user->avatar = null;
+            $user->cv_url = null;
+            $user->resume_url = null;
+        }
+
+        // Récupérer les services
+        $services = Service::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->limit(6)
+            ->get();
+
+        // Récupérer les articles de blog
+        $posts = BlogPost::where('is_published', true)
+            ->orderBy('created_at', 'desc')
+            ->limit(3)
+            ->get();
+
         // Passer toutes les variables à la vue
-        return view('pages.home', compact('projects', 'featuredProjects', 'posts', 'services', 'stats', 'seo'));
+        return view('pages.home', compact('projects', 'featuredProjects', 'posts', 'services', 'stats', 'seo', 'user'));
     }
 
     private function getIconClass($title){

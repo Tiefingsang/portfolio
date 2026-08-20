@@ -27,23 +27,100 @@
 </div>
 
 <!-- Section À propos -->
-<div class="section about align-left" id="about-section">
+<div class="section about align-left" id="about-section" style="padding: 80px 0; background: #fff;">
     <div class="fw">
-        <div class="text-box">
-            <h1 class="animated">Je suis Tiefing Sangare, <br />Développeur Full Stack & Expert SEO <br />basé à Bamako, Mali.</h1>
-            <p class="animated">
-                Passionné par le développement web et les nouvelles technologies, je crée des solutions digitales
-                performantes et innovantes pour les entreprises au Mali et à l'international.
-                Fondateur de <strong>Masadigitale</strong>, j'accompagne mes clients dans leur transformation digitale
-                avec des applications sur mesure, un design soigné et un référencement optimal.
-            </p>
-        </div>
-        <div class="bts">
-            <a href="#" class="btn extra animated">Télécharger mon CV</a>
+        <div class="row" style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px;">
+
+            <!-- Colonne Avatar - Image agrandie -->
+            <div class="col col-m-12 col-t-5 col-d-5" style="text-align: center; flex: 1; min-width: 300px;">
+                <div class="avatar-wrapper" style="display: inline-block; position: relative;">
+                    <img src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'Tiefing Sangare') . '&background=ff6c00&color=fff&size=500' }}"
+                         alt="{{ $user->name ?? 'Tiefing Sangare' }}"
+                         style="width: 100%; max-width: 500px; height: auto; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: block; margin: 0 auto;">
+                    <div style="position: absolute; bottom: 20px; right: 20px; background: #ff6c00; border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                        <i class="icon ion-ios-code" style="color: white; font-size: 32px;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne Texte -->
+            <div class="col col-m-12 col-t-7 col-d-7" style="flex: 2; min-width: 300px;">
+                <div class="text-box">
+                    <div style="display: inline-block; background: #ff6c00; color: white; font-size: 12px; padding: 5px 20px; border-radius: 20px; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase;">
+                        {{ $user->title ?? 'Développeur Full Stack & Expert SEO' }}
+                    </div>
+
+                    <h1 style="font-size: 42px; margin-bottom: 20px; color: #1a1a2e; font-weight: 700; line-height: 1.2;">
+                        Je suis <span style="color: #ff6c00;">{{ $user->name ?? 'Tiefing Sangare' }}</span>
+                        <br />
+                        <span style="font-size: 28px; font-weight: 500; color: #555;">
+                            {{ $user->title ?? 'Développeur Full Stack & Expert SEO' }}
+                        </span>
+                        <br />
+                        <span style="font-size: 20px; font-weight: 400; color: #888;">
+                            basé à {{ $user->location ?? 'Bamako, Mali' }}
+                        </span>
+                    </h1>
+
+                    <p style="font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 20px;">
+                        {{ $user->bio ?? 'Développeur web passionné et entrepreneur digital basé à Bamako, Mali.' }}
+                    </p>
+
+                    <p style="font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 30px;">
+                        {{ $user->about ?? 'Passionné par le développement web et les nouvelles technologies, je crée des solutions digitales performantes et innovantes pour les entreprises au Mali et à l\'international. Fondateur de Masadigitale, j\'accompagne mes clients dans leur transformation digitale avec des applications sur mesure, un design soigné et un référencement optimal.' }}
+                    </p>
+
+                    <!-- Boutons -->
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="{{ route('contact') }}" class="btn" style="background: #ff6c00; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 500; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px;"
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(255, 108, 0, 0.3)';"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="icon ion-ios-chatbubble"></i>
+                            Me contacter
+                        </a>
+
+                        @if($user->cv_url || $user->resume_url)
+                            <a href="{{ $user->cv_url ?? $user->resume_url }}" class="btn" target="_blank" style="background: transparent; border: 2px solid #ff6c00; color: #ff6c00; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 500; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px;"
+                               onmouseover="this.style.background='#ff6c00'; this.style.color='white';"
+                               onmouseout="this.style.background='transparent'; this.style.color='#ff6c00';">
+                                <i class="icon ion-ios-download"></i>
+                                Télécharger mon CV
+                            </a>
+                        @endif
+
+                        <a href="https://wa.me/22366894475?text=Bonjour%20Tiefing%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20vos%20services"
+                           target="_blank"
+                           class="btn"
+                           style="background: #25D366; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 500; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px;"
+                           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(37, 211, 102, 0.3)';"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="icon ion-logo-whatsapp" style="font-size: 18px;"></i>
+                            WhatsApp
+                        </a>
+                    </div>
+
+                    <!-- Réseaux sociaux -->
+                    @if($user->social_links && count($user->social_links) > 0)
+                        <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid #eee;">
+                            <p style="color: #888; font-size: 14px; margin-bottom: 15px;">Suivez-moi sur les réseaux</p>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                @foreach($user->social_links as $social)
+                                    <a href="{{ $social['url'] }}" target="_blank"
+                                       style="display: inline-flex; align-items: center; gap: 8px; background: {{ $social['color'] }}; color: white; padding: 8px 18px; border-radius: 25px; text-decoration: none; font-size: 13px; transition: all 0.3s;"
+                                       onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)';"
+                                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                        <i class="{{ $social['icon'] }}"></i>
+                                        {{ $social['name'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 <!-- Section Services -->
 <div class="section services gray align-left" id="services-section">
     <div class="fw">

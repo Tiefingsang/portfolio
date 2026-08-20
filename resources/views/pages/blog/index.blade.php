@@ -6,12 +6,14 @@
 
 @section('content')
 
-<!-- Hero Section Blog -->
-<div class="section works align-left" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 80px 0;">
+<!-- Hero Section Blog avec image de fond -->
+<div class="section works align-left" style="background: linear-gradient(135deg, rgba(3, 3, 3, 0.233) 0%, rgba(8, 8, 8, 0.205) 100%), url('{{ asset('images/blogs/blog_index_b1.png') }}'); background-size: cover; background-position: center; background-attachment: fixed; padding: 100px 0;">
     <div class="fw">
         <div class="titles animated text-center">
             <div class="title" style="color: white;">Blog & Articles</div>
-            <p style="color: rgba(255,255,255,0.9); max-width: 600px; margin: 20px auto 0;">Conseils, astuces et actualités sur le développement web, le SEO et l'entrepreneuriat digital au Mali</p>
+            <p style="color: rgba(255,255,255,0.95); max-width: 600px; margin: 20px auto 0; font-size: 18px;">
+                Conseils, astuces et actualités sur le développement web, le SEO et l'entrepreneuriat digital au Mali
+            </p>
         </div>
     </div>
 </div>

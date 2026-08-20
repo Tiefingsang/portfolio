@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css'])
     <style>
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #0505051a 0%, #16213e44 50%, #1a1b1d33 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -317,7 +317,7 @@
             <!-- Bouton -->
             <button type="submit" class="btn-login">
                 <span>Se connecter</span>
-                
+
             </button>
         </form>
 

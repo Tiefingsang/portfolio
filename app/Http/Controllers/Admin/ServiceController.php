@@ -23,20 +23,31 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => 'required|max:255',
             'icon' => 'nullable|max:50',
             'description' => 'required',
             'full_description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20048',
-            'order' => 'integer',
-            'is_featured' => 'boolean',
-            'is_active' => 'boolean',
-            'features' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            'order' => 'nullable|integer',
+            'is_featured' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
+            'features' => 'nullable|string', // Changé : string au lieu de array
             'button_text' => 'nullable|max:50',
             'button_link' => 'nullable|url',
+            'meta_title' => 'nullable|max:255',
+            'meta_description' => 'nullable|string',
         ]);
+
+        // Traitement des features : convertir la chaîne en tableau
+        $features = null;
+        if ($request->features) {
+            // Nettoyer et séparer par ligne ou virgule
+            $featuresArray = preg_split('/[\n,]+/', $request->features);
+            $featuresArray = array_map('trim', $featuresArray);
+            $featuresArray = array_filter($featuresArray); // Supprimer les valeurs vides
+            $features = json_encode(array_values($featuresArray));
+        }
 
         $data = [
             'title' => $request->title,
@@ -47,7 +58,7 @@ class ServiceController extends Controller
             'order' => $request->order ?? 0,
             'is_featured' => $request->has('is_featured'),
             'is_active' => $request->has('is_active'),
-            'features' => $request->features ? json_encode($request->features) : null,
+            'features' => $features,
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'button_text' => $request->button_text ?? 'En savoir plus',
@@ -72,12 +83,28 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         return view('admin.services.show', compact('service'));
     }
-
-    public function edit($id)
+public function edit($id)
     {
         $service = Service::findOrFail($id);
-        $features = $service->features ? json_decode($service->features, true) : [];
-        return view('admin.services.edit', compact('service', 'features'));
+
+        // Décoder les features en tableau
+        $featuresArray = [];
+        if ($service->features) {
+            if (is_string($service->features)) {
+                $featuresArray = json_decode($service->features, true);
+                // Si le décodage échoue, traiter comme une chaîne simple
+                if (!is_array($featuresArray)) {
+                    $featuresArray = [$service->features];
+                }
+            } elseif (is_array($service->features)) {
+                $featuresArray = $service->features;
+            }
+        }
+
+        // Convertir le tableau en chaîne pour le textarea (une par ligne)
+        $featuresString = !empty($featuresArray) ? implode("\n", $featuresArray) : '';
+
+        return view('admin.services.edit', compact('service', 'featuresString'));
     }
 
     public function update(Request $request, $id)
@@ -89,14 +116,26 @@ class ServiceController extends Controller
             'icon' => 'nullable|max:50',
             'description' => 'required',
             'full_description' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10048',
-            'order' => 'integer',
-            'is_featured' => 'boolean',
-            'is_active' => 'boolean',
-            'features' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            'order' => 'nullable|integer',
+            'is_featured' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
+            'features' => 'nullable|string', // Changé : string au lieu de array
             'button_text' => 'nullable|max:50',
             'button_link' => 'nullable|url',
+            'meta_title' => 'nullable|max:255',
+            'meta_description' => 'nullable|string',
         ]);
+
+        // Traitement des features
+        $features = null;
+        if ($request->features) {
+            // Nettoyer et séparer par ligne ou virgule
+            $featuresArray = preg_split('/[\n,]+/', $request->features);
+            $featuresArray = array_map('trim', $featuresArray);
+            $featuresArray = array_filter($featuresArray); // Supprimer les valeurs vides
+            $features = json_encode(array_values($featuresArray));
+        }
 
         $data = [
             'title' => $request->title,
@@ -107,7 +146,7 @@ class ServiceController extends Controller
             'order' => $request->order ?? 0,
             'is_featured' => $request->has('is_featured'),
             'is_active' => $request->has('is_active'),
-            'features' => $request->features ? json_encode($request->features) : null,
+            'features' => $features,
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'button_text' => $request->button_text ?? 'En savoir plus',
@@ -116,6 +155,7 @@ class ServiceController extends Controller
 
         // Gestion de l'image
         if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image
             if ($service->image && Storage::disk('public')->exists($service->image)) {
                 Storage::disk('public')->delete($service->image);
             }
@@ -135,6 +175,7 @@ class ServiceController extends Controller
     {
         $service = Service::findOrFail($id);
 
+        // Supprimer l'image
         if ($service->image && Storage::disk('public')->exists($service->image)) {
             Storage::disk('public')->delete($service->image);
         }

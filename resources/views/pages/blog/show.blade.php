@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="section started-blog">
-    <div class="slide" style="background-image: url({{ asset('images/slide-bg-1.jpg') }});"></div>
+    <div class="slide" style="background-image: url({{ asset('images/blogs/blog_show_b2.png') }});"></div>
     <div class="centrize full-width">
         <div class="vertical-center">
             <div class="st-title align-center">
@@ -13,7 +13,9 @@
                     {{ $post->published_at ? $post->published_at->format('d F Y') : date('d F Y') }}
                 </span>
                 Blog Post
+                <h1>{{ $post->title }}</h1>
             </div>
+
         </div>
     </div>
 </div>
