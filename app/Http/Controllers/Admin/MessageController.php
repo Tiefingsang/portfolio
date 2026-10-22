@@ -49,7 +49,8 @@ class MessageController extends Controller
         $message = Message::findOrFail($id);
         $message->delete();
 
-        return redirect()->route('admin.messages')->with('success', 'Message supprimé avec succès');
+        // ✅ Corrigé : admin.messages.index
+        return redirect()->route('admin.messages.index')->with('success', 'Message supprimé avec succès');
     }
 
     public function bulkDelete(Request $request)
@@ -58,16 +59,20 @@ class MessageController extends Controller
 
         if (!empty($ids)) {
             Message::whereIn('id', $ids)->delete();
-            return redirect()->route('admin.messages')->with('success', count($ids) . ' messages supprimés');
+
+            // ✅ Corrigé : admin.messages.index
+            return redirect()->route('admin.messages.index')->with('success', count($ids) . ' messages supprimés');
         }
 
-        return redirect()->route('admin.messages')->with('error', 'Aucun message sélectionné');
+        // ✅ Corrigé : admin.messages.index
+        return redirect()->route('admin.messages.index')->with('error', 'Aucun message sélectionné');
     }
 
     public function markAllAsRead()
     {
         Message::where('is_read', false)->update(['is_read' => true]);
 
-        return redirect()->route('admin.messages')->with('success', 'Tous les messages ont été marqués comme lus');
+        // ✅ Corrigé : admin.messages.index
+        return redirect()->route('admin.messages.index')->with('success', 'Tous les messages ont été marqués comme lus');
     }
 }
