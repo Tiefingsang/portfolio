@@ -14,6 +14,7 @@
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.6",
+        "mews/purifier": "^3.4",
         "spatie/laravel-medialibrary": "^11.23",
         "spatie/laravel-sitemap": "^8.1",
         "unisharp/laravel-filemanager": "^2.15"

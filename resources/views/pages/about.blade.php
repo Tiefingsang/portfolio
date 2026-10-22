@@ -1,49 +1,538 @@
 @extends('layouts.app')
 
-@section('title', 'À propos - ' . ($user->name ?? 'Tiefing Sangare') . ', Développeur Web Full Stack & Expert en Digitalisation des Entreprises en Afrique - Bamako, Mali')
-@section('meta_description', $user->bio ?? 'Découvrez ' . ($user->name ?? 'Tiefing Sangare') . ', développeur web full stack et entrepreneur digital à Bamako, Mali. Expert en création de sites web, applications mobiles et IA WhatsApp.')
-@section('keywords', 'Tiefing Sangare, développeur web Mali, Masadigitale, entrepreneur digital Mali, full stack Mali, à propos développeur')
+@section('title', 'À propos - ' . ($user->name ?? 'Tiefing Sangare') . ', Développeur Web Full Stack')
+@section('meta_description', $user->bio ?? 'Découvrez ' . ($user->name ?? 'Tiefing Sangare') . ', développeur web full stack et entrepreneur digital à Bamako, Mali.')
 
-@section('og_title', 'À propos - ' . ($user->name ?? 'Tiefing Sangare') . ', Développeur Web Full Stack au Mali')
-@section('og_description', $user->bio ?? 'Découvrez mon parcours, mes compétences et ma passion pour le développement web.')
-@section('og_image', $user->avatar ? Storage::url($user->avatar) : asset('images/about-og.jpg'))
+@push('styles')
+<style>
+    /* ═══════════════════════════════════════════════
+       ANTI-CONFLIT & BASE
+    ═══════════════════════════════════════════════ */
+    .about-wrapper, .about-wrapper * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        box-sizing: border-box;
+    }
+
+    /* SVG Icons helper */
+    .svg-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em;
+        height: 1em;
+        stroke-width: 2;
+        stroke: currentColor;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════════ */
+    .about-hero {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.75) 100%), url('{{ asset('images/apropos/ab1.png') }}');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        padding: 140px 20px 100px;
+        text-align: center;
+        color: white;
+    }
+    .about-hero .icon-box {
+        width: 90px;
+        height: 90px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin-bottom: 25px;
+        color: #ff6c00;
+    }
+    .about-hero h1 {
+        color: white !important;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+    }
+    .about-hero p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1.25rem;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION BIO / PRÉSENTATION
+    ═══════════════════════════════════════════════ */
+    .bio-section {
+        background: white;
+        padding: 100px 20px;
+    }
+    .bio-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 60px;
+        align-items: center;
+    }
+    @media (max-width: 992px) {
+        .bio-container { grid-template-columns: 1fr; gap: 40px; }
+        .about-hero h1 { font-size: 2.5rem; }
+    }
+
+    .bio-image {
+        position: relative;
+        text-align: center;
+    }
+    .bio-image img {
+        width: 100%;
+        max-width: 450px;
+        border-radius: 30px;
+        box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+        display: block;
+        margin: 0 auto;
+    }
+    .bio-image .badge {
+        position: absolute;
+        bottom: 30px;
+        right: 20px;
+        background: #ff6c00;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 16px;
+        font-weight: 700;
+        box-shadow: 0 15px 30px rgba(255, 108, 0, 0.4);
+        transform: rotate(-5deg);
+    }
+
+    .bio-content .subtitle {
+        display: inline-block;
+        background: #fff7ed;
+        color: #ff6c00 !important;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+    .bio-content h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #0f172a !important;
+        line-height: 1.2;
+        margin-bottom: 25px;
+        letter-spacing: -1px;
+    }
+    .bio-content h2 span { color: #ff6c00; }
+    .bio-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #475569;
+        margin-bottom: 20px;
+    }
+    .bio-actions {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 35px;
+    }
+    .btn-orange {
+        background: #ff6c00;
+        color: white !important;
+        padding: 14px 30px;
+        border-radius: 40px;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.3s;
+        box-shadow: 0 10px 25px rgba(255, 108, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .btn-orange:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(255, 108, 0, 0.4); }
+    .btn-wa {
+        background: #25D366;
+        color: white !important;
+        padding: 14px 30px;
+        border-radius: 40px;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+    }
+    .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4); }
+
+    /* ═══════════════════════════════════════════════
+       SECTION COMPÉTENCES
+    ═══════════════════════════════════════════════ */
+    .skills-section {
+        background: #f8fafc;
+        padding: 100px 20px;
+    }
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    .section-header h2 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #0f172a !important;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+    }
+    .section-header p {
+        color: #64748b;
+        font-size: 1.15rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .skill-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        border: 1px solid #f1f5f9;
+    }
+    .skill-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(255, 108, 0, 0.15);
+        border-color: #ffedd5;
+    }
+    .skill-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ff6c00, #e05a00);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        color: white;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 20px rgba(255, 108, 0, 0.2);
+    }
+    .skill-card h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0f172a !important;
+        margin-bottom: 10px;
+    }
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 15px;
+    }
+    .skill-tag {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION PARCOURS (TIMELINE)
+    ═══════════════════════════════════════════════ */
+    .journey-section {
+        background: white;
+        padding: 100px 20px;
+    }
+    .timeline {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 100%;
+        background: #e2e8f0;
+    }
+    @media (max-width: 768px) {
+        .timeline::before { left: 30px; }
+    }
+
+    .timeline-item {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 50%;
+        position: relative;
+        margin-bottom: 50px;
+    }
+    .timeline-item:nth-child(even) {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 50%;
+    }
+    @media (max-width: 768px) {
+        .timeline-item, .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-left: 80px;
+            padding-right: 0;
+        }
+    }
+
+    .timeline-content {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 25px;
+        width: 100%;
+        max-width: 350px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        position: relative;
+    }
+    .timeline-item:nth-child(odd) .timeline-content::after {
+        content: '';
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-top: 1px solid #e2e8f0;
+        border-right: 1px solid #e2e8f0;
+    }
+    .timeline-item:nth-child(even) .timeline-content::after {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        border-left: 1px solid #e2e8f0;
+    }
+    @media (max-width: 768px) {
+        .timeline-content::after { display: none; }
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: #ff6c00;
+        border: 4px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 0 4px rgba(255, 108, 0, 0.2);
+        z-index: 2;
+    }
+    @media (max-width: 768px) {
+        .timeline-dot { left: 30px; }
+    }
+
+    .timeline-year {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ff6c00;
+        margin-bottom: 10px;
+    }
+    .timeline-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a !important;
+        margin-bottom: 10px;
+    }
+    .timeline-desc {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION INFOS / CONTACT
+    ═══════════════════════════════════════════════ */
+    .info-section {
+        background: #f8fafc;
+        padding: 80px 20px;
+    }
+    .info-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+    @media (max-width: 768px) { .info-container { grid-template-columns: 1fr; } }
+
+    .info-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .info-card h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0f172a !important;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .info-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .info-list li .svg-icon {
+        color: #ff6c00;
+        font-size: 20px;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .info-list li strong {
+        display: block;
+        color: #0f172a;
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+    .info-list li span, .info-list li a {
+        color: #64748b;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+    .social-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white !important;
+        font-size: 22px;
+        text-decoration: none !important;
+        transition: all 0.3s;
+    }
+    .social-btn:hover {
+        transform: translateY(-3px);
+        opacity: 0.9;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #dcfce7;
+        color: #166534;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+    .status-badge .dot {
+        width: 8px;
+        height: 8px;
+        background: #16a34a;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       CTA FINAL
+    ═══════════════════════════════════════════════ */
+    .cta-final {
+        background: linear-gradient(135deg, #ff6c00, #e05a00);
+        padding: 80px 20px;
+        text-align: center;
+    }
+    .cta-final h2 {
+        color: white !important;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+    .cta-final p {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 35px;
+    }
+    .cta-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+@endpush
 
 @section('content')
+<div class="about-wrapper">
 
-<!-- Hero Section -->
-<!-- Hero Section avec image de fond -->
-<div class="section" style="background: linear-gradient(135deg, rgba(25, 26, 32, 0.452) 0%, rgba(18, 18, 19, 0.562) 100%), url('{{ asset('images/apropos/ab1.png') }}'); background-size: cover; background-position: center; padding: 120px 0; text-align: center; position: relative; overflow: hidden;">
-    <!-- Effet de particules ou overlay supplémentaire (optionnel) -->
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.1);"></div>
-
-    <div class="fw" style="position: relative; z-index: 1;">
-        <div class="animated fadeInUp">
-            <!-- Icône ou avatar (optionnel) -->
-            <div style="margin-bottom: 25px;">
-                <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.185); margin: 0 auto; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-                    <i class="icon ion-ios-person" style="color: white; font-size: 48px;"></i>
-                </div>
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <div class="about-hero">
+        <div class="fw">
+            <div class="icon-box">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="width: 44px; height: 44px;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
-
-            <h1 class="title" style="color: white; font-size: 52px; font-weight: 700; margin-bottom: 20px; text-shadow: 0 2px 20px rgba(0,0,0,0.2);">
-                À propos de moi
-            </h1>
-            <p style="color: rgba(255,255,255,0.95); font-size: 18px; max-width: 600px; margin: 0 auto; text-shadow: 0 1px 10px rgba(0,0,0,0.1);">
-                Découvrez mon parcours, mes compétences et ma vision du digital
-            </p>
+            <h1>À propos de moi</h1>
+            <p>Découvrez mon parcours, mes compétences et ma vision du digital en Afrique.</p>
         </div>
     </div>
-</div>
 
-<!-- Section À propos -->
-<!-- Section À propos -->
-<div class="section about align-left" id="about-section" style="padding: 80px 0; background: #fff;">
-    <div class="fw">
-        <div class="row" style="display: flex; flex-wrap: wrap; align-items: center;">
-            <!-- Colonne Avatar -->
-            <div class="col col-m-12 col-t-5 col-d-5" style="text-align: center; margin-bottom: 40px;">
+    <!-- ═══════════════ BIO ═══════════════ -->
+    <div class="bio-section" id="about-section">
+        <div class="bio-container">
+            <div class="bio-image">
                 @php
-                    $avatarUrl = null;
+                    $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'Tiefing Sangare') . '&background=ff6c00&color=fff&size=600';
                     if ($user->avatar) {
                         if (Storage::disk('public')->exists($user->avatar)) {
                             $avatarUrl = Storage::url($user->avatar);
@@ -51,543 +540,484 @@
                             $avatarUrl = asset($user->avatar);
                         }
                     }
-                    if (!$avatarUrl) {
-                        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? 'Tiefing Sangare') . '&background=ff6c00&color=fff&size=400&rounded=true&bold=true';
-                    }
                 @endphp
-                <div class="avatar-wrapper" style="display: inline-block; position: relative;">
-                    <img src="{{ $avatarUrl }}" alt="{{ $user->name ?? 'Tiefing Sangare' }}"
-                         style="width: 340px; height: 340px; border-radius: 20px; object-fit: cover; border: 5px solid #ff6c00; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
-                    <div style="position: absolute; bottom: 20px; right: 20px; background: #ff6c00; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-                        <i class="icon ion-ios-code" style="color: white; font-size: 28px;"></i>
-                    </div>
-                </div>
+                <img src="{{ $avatarUrl }}" alt="{{ $user->name ?? 'Tiefing Sangare' }}">
+                <div class="badge">Développeur Full Stack</div>
             </div>
 
-            <!-- Colonne Texte -->
-            <div class="col col-m-12 col-t-7 col-d-7">
-                <div class="text-box" style="padding-left: 20px;">
-                    <div style="display: inline-block; background: #ff6c00; color: white; font-size: 12px; padding: 5px 15px; border-radius: 20px; margin-bottom: 20px;">
-                        Développeur Full Stack
-                    </div>
-                    <h1 style="font-size: 42px; margin-bottom: 20px; color: #222; font-weight: 700;">
-                        Je suis <span style="color: #ff6c00;">{{ $user->name ?? 'Tiefing Sangare' }}</span>
-                    </h1>
-                    <h3 style="font-size: 22px; color: #666; margin-bottom: 25px; font-weight: 400;">
-                        {{ $user->title ?? 'Développeur Full Stack & Expert SEO' }}<br>
-                        basé à <span style="color: #ff6c00;">{{ $user->location ?? 'Bamako, Mali' }}</span>
-                    </h3>
+            <div class="bio-content">
+                <div class="subtitle">{{ $user->title ?? 'Développeur & Entrepreneur' }}</div>
+                <h2>Je suis <span>{{ $user->name ?? 'Tiefing Sangare' }}</span></h2>
+                <p>
+                    {{ $user->bio ?? 'Développeur web passionné et entrepreneur digital basé à Bamako, Mali.' }}
+                </p>
+                <p>
+                    {{ $user->about ?? 'Passionné par le développement web et les nouvelles technologies, je crée des solutions digitales performantes et innovantes pour les entreprises au Mali et à l\'international. Fondateur de Masadigitale, j\'accompagne mes clients dans leur transformation digitale avec des applications sur mesure, un design soigné et un référencement optimal.' }}
+                </p>
 
-                    <p style="font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 25px;">
-                        {{ $user->bio ?? 'Développeur web passionné et entrepreneur digital basé à Bamako, Mali.' }}
-                    </p>
-
-                    <p style="font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 30px;">
-                        {{ $user->about ?? 'Passionné par le développement web et les nouvelles technologies, je crée des solutions digitales performantes et innovantes pour les entreprises au Mali et à l\'international. Fondateur de Masadigitale, j\'accompagne mes clients dans leur transformation digitale avec des applications sur mesure, un design soigné et un référencement optimal.' }}
-                    </p>
-
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <a href="{{ route('contact') }}" class="btn" style="background: #ff6c00; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 500; transition: all 0.3s;">
-                            Me contacter
-                        </a>
-                        <a href="https://wa.me/22366894475?text=Bonjour%20Tiefing%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20vos%20services%20et%20j%27aimerais%20discuter%20de%20mon%20projet."
-                        target="_blank"
-                        class="btn"
-                        style="background: #25D366; color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 500; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);"
-                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(37, 211, 102, 0.4)';"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)';">
-                            <i class="icon ion-logo-whatsapp" style="font-size: 20px;"></i>
-                            WhatsApp
-                        </a>
-                    </div>
+                <div class="bio-actions">
+                    <a href="{{ route('contact') }}" class="btn-orange">
+                        <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Me contacter
+                    </a>
+                    <a href="https://wa.me/22366894475" target="_blank" class="btn-wa">
+                        <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                        WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Section Informations Personnelles -->
-<div class="section" style="padding: 60px 0; background: #f8f9fa;">
-    <div class="fw">
-        <div class="row">
-            <div class="col col-m-12 col-t-6 col-d-6">
-                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: 100%;">
-                    <h3 style="margin-bottom: 25px; color: #222; font-size: 24px;">
-                        <span style="background: #ff6c00; width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin-right: 10px;"></span>
-                        Informations personnelles
-                    </h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
-                            <i class="icon ion-ios-person" style="color: #ff6c00; font-size: 20px; width: 30px;"></i>
-                            <div>
-                                <strong>Nom complet</strong><br>
-                                <span style="color: #666;">{{ $user->name ?? 'Tiefing Sangare' }}</span>
-                            </div>
-                        </li>
-                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
-                            <i class="icon ion-ios-email" style="color: #ff6c00; font-size: 20px; width: 30px;"></i>
-                            <div>
-                                <strong>Email</strong><br>
-                                <a href="mailto:{{ $user->email }}" style="color: #666; text-decoration: none;">{{ $user->email }}</a>
-                            </div>
-                        </li>
-                        @if($user->phone)
-                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
-                            <i class="fas fa-phone" style="color: #ff6c00; font-size: 20px; width: 30px;"></i>
-                            <div>
-                                <strong>Téléphone</strong><br>
-                                <a href="tel:{{ $user->phone }}" style="color: #666; text-decoration: none;">{{ $user->phone }}</a>
-                            </div>
-                        </li>
-                        @endif
-                        @if($user->location)
-                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
-                            <i class="icon ion-ios-location" style="color: #ff6c00; font-size: 20px; width: 30px;"></i>
-                            <div>
-                                <strong>Localisation</strong><br>
-                                <span style="color: #666;">{{ $user->location }}</span>
-                            </div>
-                        </li>
-                        @endif
-                        @if($user->company)
-                        <li style="margin-bottom: 20px; display: flex; align-items: flex-start;">
-                            <i class="fas fa-building" style="color: #ff6c00; font-size: 20px; width: 30px;"></i>
-                            <div>
-                                <strong>Entreprise</strong><br>
-                                <span style="color: #666;">{{ $user->company }}</span>
-                            </div>
-                        </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col col-m-12 col-t-6 col-d-6">
-                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: 100%;">
-                    <h3 style="margin-bottom: 25px; color: #222; font-size: 24px;">
-                        <span style="background: #ff6c00; width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin-right: 10px;"></span>
-                        📱 Me suivre
-                    </h3>
-                    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;">
-                        @if($user->github)
-                        <a href="{{ $user->github }}" target="_blank" style="background: #333; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-github" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                        @if($user->linkedin)
-                        <a href="{{ $user->linkedin }}" target="_blank" style="background: #0077B5; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-linkedin" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                        @if($user->twitter)
-                        <a href="{{ $user->twitter }}" target="_blank" style="background: #1DA1F2; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-twitter" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                        @if($user->facebook)
-                        <a href="{{ $user->facebook }}" target="_blank" style="background: #1877F2; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-facebook" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                        @if($user->instagram)
-                        <a href="{{ $user->instagram }}" target="_blank" style="background: #E4405F; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-instagram" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                        @if($user->youtube)
-                        <a href="{{ $user->youtube }}" target="_blank" style="background: #FF0000; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.3s;">
-                            <i class="icon ion-social-youtube" style="font-size: 24px;"></i>
-                        </a>
-                        @endif
-                    </div>
-
-                    <div style="margin-top: 20px;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                            <span style="color: #666;">Disponibilité</span>
-                            <span style="color: #28a745; font-weight: 500;">✔️ Disponible</span>
-                        </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-                            <span style="color: #666;">Expérience</span>
-                            <span style="color: #333; font-weight: 500;">5+ ans</span>
-                        </div>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0;">
-                            <span style="color: #666;">Projets réalisés</span>
-                            <span style="color: #333; font-weight: 500;">15+ projets</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- ═══════════════ COMPÉTENCES ═══════════════ -->
+    <div class="skills-section">
+        <div class="section-header">
+            <h2>Mes compétences</h2>
+            <p>Les technologies et services que je maîtrise pour votre transformation digitale.</p>
         </div>
-    </div>
-</div>
 
-<!-- Compétences -->
-<div class="section" style="padding: 80px 0; background: #f8f9fa;">
-    <div class="fw">
-        <div style="text-align: center; margin-bottom: 50px;">
-            <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 15px;">Mes compétences</h2>
-            <p style="color: #666; max-width: 600px; margin: 0 auto;">Les technologies et services que je propose pour accompagner votre transformation digitale</p>
-        </div>
-        <div class="row" style="display: flex; flex-wrap: wrap;">
-
+        <div class="skills-grid">
             <!-- Backend -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="icon ion-code" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Développement Backend</h3>
-                    <p style="color: #666; font-size: 14px;">Laravel, PHP, Springboot, MySQL, Node.js, API REST</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 90%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Expert</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                        <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                        <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                    </svg>
+                </div>
+                <h3>Développement Backend</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Laravel</span>
+                    <span class="skill-tag">PHP</span>
+                    <span class="skill-tag">Springboot</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">Node.js</span>
                 </div>
             </div>
 
             <!-- Frontend -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="icon ion-ios-world" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Développement Frontend</h3>
-                    <p style="color: #666; font-size: 14px;">React, Next.js, Tailwind CSS, Vue.js, Alpine.js, HTML5/CSS3</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 85%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Avancé</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </div>
+                <h3>Développement Frontend</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Next.js</span>
+                    <span class="skill-tag">Tailwind CSS</span>
+                    <span class="skill-tag">Vue.js</span>
                 </div>
             </div>
 
             <!-- Mobile -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="icon ion-iphone" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Applications Mobiles</h3>
-                    <p style="color: #666; font-size: 14px;">Flutter, React Native, iOS, Android, Firebase</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 80%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Avancé</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                </div>
+                <h3>Applications Mobiles</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Flutter</span>
+                    <span class="skill-tag">React Native</span>
+                    <span class="skill-tag">iOS</span>
+                    <span class="skill-tag">Android</span>
+                </div>
+            </div>
+
+            <!-- E-commerce -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </div>
+                <h3>E-commerce</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Shopify</span>
+                    <span class="skill-tag">WooCommerce</span>
+                    <span class="skill-tag">Prestashop</span>
+                    <span class="skill-tag">Stripe/PayPal</span>
+                    <span class="skill-tag">Mobile Money</span>
+                </div>
+            </div>
+
+            <!-- Publicité en ligne -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </div>
+                <h3>Publicité & Acquisition</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Meta Ads</span>
+                    <span class="skill-tag">Google Ads</span>
+                    <span class="skill-tag">TikTok Ads</span>
+                    <span class="skill-tag">Campagnes</span>
+                    <span class="skill-tag">ROAS</span>
+                </div>
+            </div>
+
+            <!-- Hébergement & Cloud -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                    </svg>
+                </div>
+                <h3>Hébergement & Cloud</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Noms de domaine</span>
+                    <span class="skill-tag">VPS & Cloud</span>
+                    <span class="skill-tag">SSL/HTTPS</span>
+                    <span class="skill-tag">Emails Pro</span>
+                    <span class="skill-tag">Sauvegardes</span>
+                </div>
+            </div>
+
+            <!-- Équipements Informatiques -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <h3>Fourniture d'Équipements</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Ordinateurs</span>
+                    <span class="skill-tag">Imprimantes</span>
+                    <span class="skill-tag">Réseaux</span>
+                    <span class="skill-tag">Serveurs</span>
+                    <span class="skill-tag">Maintenance</span>
+                </div>
+            </div>
+
+            <!-- Technologies & Systèmes -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="14" x2="23" y2="14"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </div>
+                <h3>Technologies & Systèmes</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Installation</span>
+                    <span class="skill-tag">Configuration</span>
+                    <span class="skill-tag">Cybersécurité</span>
+                    <span class="skill-tag">Logiciels Pro</span>
                 </div>
             </div>
 
             <!-- SEO -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="icon ion-ios-analytics" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">SEO & Référencement</h3>
-                    <p style="color: #666; font-size: 14px;">Google Analytics, Search Console, Optimisation, Netlinking, Référencement local</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 85%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Expert</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                </div>
+                <h3>SEO & Référencement</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Google Analytics</span>
+                    <span class="skill-tag">Search Console</span>
+                    <span class="skill-tag">Netlinking</span>
+                    <span class="skill-tag">SEO Local</span>
                 </div>
             </div>
 
             <!-- IA & Chatbots -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="icon ion-ios-chatbubble" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">IA & Chatbots</h3>
-                    <p style="color: #666; font-size: 14px;">OpenAI API, WhatsApp Business API, Chatbots intelligents, NLP</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 75%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Avancé</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                        <circle cx="12" cy="5" r="2"></circle>
+                        <path d="M12 7v4"></path>
+                        <line x1="8" y1="16" x2="8" y2="16"></line>
+                        <line x1="16" y1="16" x2="16" y2="16"></line>
+                    </svg>
+                </div>
+                <h3>IA & Chatbots</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">OpenAI API</span>
+                    <span class="skill-tag">WhatsApp API</span>
+                    <span class="skill-tag">NLP</span>
                 </div>
             </div>
 
             <!-- UI/UX Design -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-palette" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">UI/UX Design</h3>
-                    <p style="color: #666; font-size: 14px;">Figma, Adobe XD, Design responsive, Prototypage, Testing</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 80%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Avancé</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <circle cx="13.5" cy="6.5" r=".5"></circle>
+                        <circle cx="17.5" cy="10.5" r=".5"></circle>
+                        <circle cx="8.5" cy="7.5" r=".5"></circle>
+                        <circle cx="6.5" cy="12.5" r=".5"></circle>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+                    </svg>
+                </div>
+                <h3>UI/UX Design</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Adobe XD</span>
+                    <span class="skill-tag">Prototypage</span>
                 </div>
             </div>
 
-            <!-- NOUVEAU : Marketing Digital & Community Management -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-bullhorn" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Marketing Digital</h3>
-                    <p style="color: #666; font-size: 14px;">Stratégie digitale, Community Management, Gestion de pages d'entreprise, Publicité en ligne, Social Media</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 90%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Expert</span>
-                    </div>
+            <!-- Marketing Digital -->
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M3 11l18-5v12L3 14v-3z"></path>
+                        <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
+                    </svg>
+                </div>
+                <h3>Marketing Digital</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Stratégie digitale</span>
+                    <span class="skill-tag">Community Management</span>
+                    <span class="skill-tag">Social Media</span>
                 </div>
             </div>
-
-            <!-- NOUVEAU : Copywriting & Création de contenu -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-pen-fancy" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Copywriting & Contenu</h3>
-                    <p style="color: #666; font-size: 14px;">Rédaction web, Création de contenu, Copywriting, Storytelling, Rédaction SEO</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 85%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Expert</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NOUVEAU : Formation & Conseil -->
-            <div class="col col-m-12 col-t-4 col-d-4">
-                <div class="skill-card" style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: transform 0.3s; margin-bottom: 25px; height: 100%;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-chalkboard-teacher" style="color: white; font-size: 32px;"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; font-size: 20px;">Formation & Conseil</h3>
-                    <p style="color: #666; font-size: 14px;">Consultant en stratégie d'entreprise, Formation en développement web, Marketing digital, Accompagnement personnalisé</p>
-                    <div style="margin-top: 20px;">
-                        <div style="height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div style="width: 90%; height: 100%; background: #ff6c00; border-radius: 2px;"></div>
-                        </div>
-                        <span style="font-size: 12px; color: #666; margin-top: 5px; display: block;">Expert</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<style>
-    .skill-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(255, 108, 0, 0.12) !important;
-    }
-</style>
-
-<!-- Parcours professionnel -->
-<div class="section" style="padding: 80px 0; background: #f8f9fa;">
-    <div class="fw">
-        <div style="text-align: center; margin-bottom: 50px;">
-            <span style="display: inline-block; background: #ff6c00; color: white; font-size: 12px; padding: 5px 20px; border-radius: 20px; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase;">
-                Mon Parcours
-            </span>
-            <h2 style="font-size: 38px; font-weight: 700; margin-bottom: 15px; color: #1a1a2e;">
-                Un parcours au service de l'innovation
-            </h2>
-            <p style="color: #666; max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
-                Des études à l'entrepreneuriat, en passant par la formation continue
-            </p>
-        </div>
-
-        <div class="row" style="display: flex; flex-wrap: wrap; gap: 25px; justify-content: center;">
 
             <!-- Formation -->
-            <div class="col col-m-12 col-t-4 col-d-4" style="flex: 1; min-width: 250px; max-width: 350px;">
-                <div style="background: white; border-radius: 20px; padding: 35px 25px; text-align: center; box-shadow: 0 5px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; height: 100%; position: relative; overflow: hidden; border-bottom: 4px solid #ff6c00;">
-                    <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255, 108, 0, 0.05); border-radius: 50%;"></div>
-                    <div style="font-size: 48px; margin-bottom: 20px; display: inline-block; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; width: 80px; height: 80px; line-height: 80px; color: white; box-shadow: 0 10px 30px rgba(255, 108, 0, 0.2);">
-                        🎓
-                    </div>
-                    <h3 style="margin-bottom: 10px; font-size: 22px; color: #1a1a2e; font-weight: 700;">Formation</h3>
-                    <p style="color: #666; font-size: 14px; line-height: 1.6;">
-                        <strong>Diplômé en Génie Informatique</strong><br>
-                        <span style="color: #888;">+ Formations en Entrepreneuriat</span><br>
-                        <span style="color: #888;">Développement Web & Technologies Digitales</span>
-                    </p>
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🎯 Génie Informatique</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🚀 Entrepreneuriat</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">💻 Développement Web</span>
-                    </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
                 </div>
-            </div>
-
-            <!-- Expérience -->
-            <div class="col col-m-12 col-t-4 col-d-4" style="flex: 1; min-width: 250px; max-width: 350px;">
-                <div style="background: white; border-radius: 20px; padding: 35px 25px; text-align: center; box-shadow: 0 5px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; height: 100%; position: relative; overflow: hidden; border-bottom: 4px solid #ff6c00;">
-                    <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255, 108, 0, 0.05); border-radius: 50%;"></div>
-                    <div style="font-size: 48px; margin-bottom: 20px; display: inline-block; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; width: 80px; height: 80px; line-height: 80px; color: white; box-shadow: 0 10px 30px rgba(255, 108, 0, 0.2);">
-                        💼
-                    </div>
-                    <h3 style="margin-bottom: 10px; font-size: 22px; color: #1a1a2e; font-weight: 700;">Expérience</h3>
-                    <p style="color: #666; font-size: 14px; line-height: 1.6;">
-                        <strong>5+ ans d'expérience</strong><br>
-                        <span style="color: #888;">Développement web Full Stack</span><br>
-                        <span style="color: #888;">Création et accompagnement d'entreprises</span><br>
-                        <span style="color: #888;">Consultant en stratégie digitale</span>
-                    </p>
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🌐 Full Stack</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">📈 Conseil</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🤝 Accompagnement</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vision -->
-            <div class="col col-m-12 col-t-4 col-d-4" style="flex: 1; min-width: 250px; max-width: 350px;">
-                <div style="background: white; border-radius: 20px; padding: 35px 25px; text-align: center; box-shadow: 0 5px 30px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; height: 100%; position: relative; overflow: hidden; border-bottom: 4px solid #ff6c00;">
-                    <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255, 108, 0, 0.05); border-radius: 50%;"></div>
-                    <div style="font-size: 48px; margin-bottom: 20px; display: inline-block; background: linear-gradient(135deg, #ff6c00, #e05a00); border-radius: 50%; width: 80px; height: 80px; line-height: 80px; color: white; box-shadow: 0 10px 30px rgba(255, 108, 0, 0.2);">
-                        🌍
-                    </div>
-                    <h3 style="margin-bottom: 10px; font-size: 22px; color: #1a1a2e; font-weight: 700;">Vision</h3>
-                    <p style="color: #666; font-size: 14px; line-height: 1.6;">
-                        <strong>Transformer l'Afrique par le digital</strong><br>
-                        <span style="color: #888;">Accompagner la transformation digitale</span><br>
-                        <span style="color: #888;">des entreprises africaines</span><br>
-                        <span style="color: #888;">Innovation et impact social</span>
-                    </p>
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🌍 Afrique</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">💡 Innovation</span>
-                        <span style="display: inline-block; background: #f0f0f0; color: #666; font-size: 11px; padding: 3px 12px; border-radius: 12px; margin: 3px;">🚀 Impact</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Ligne de temps ou statistiques supplémentaires -->
-        <div style="margin-top: 50px; padding: 30px; background: white; border-radius: 20px; box-shadow: 0 5px 30px rgba(0,0,0,0.04);">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 20px;">
-                <div style="text-align: center;">
-                    <div style="font-size: 32px; font-weight: 700; color: #ff6c00;">5+</div>
-                    <div style="color: #666; font-size: 14px;">Années d'expérience</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 32px; font-weight: 700; color: #ff6c00;">15+</div>
-                    <div style="color: #666; font-size: 14px;">Projets réalisés</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 32px; font-weight: 700; color: #ff6c00;">10+</div>
-                    <div style="color: #666; font-size: 14px;">Entreprises accompagnées</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 32px; font-weight: 700; color: #ff6c00;">100%</div>
-                    <div style="color: #666; font-size: 14px;">Satisfaction client</div>
+                <h3>Formation & Conseil</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Consultant</span>
+                    <span class="skill-tag">Formation Web</span>
+                    <span class="skill-tag">Stratégie d'entreprise</span>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
 
-<style>
-    .col-m-12.col-t-4.col-d-4:hover > div {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(255, 108, 0, 0.12) !important;
-    }
-</style>
-
-<!-- CTA Section -->
-<div class="section" style="background: linear-gradient(135deg, #ff6c00, #e05a00); padding: 80px 0; text-align: center; position: relative; overflow: hidden;">
-    <!-- Effet de fond décoratif -->
-    <div style="position: absolute; top: -50%; right: -20%; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.05); pointer-events: none;"></div>
-    <div style="position: absolute; bottom: -30%; left: -10%; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.03); pointer-events: none;"></div>
-
-    <div class="fw" style="position: relative; z-index: 1;">
-        <h3 style="color: white; font-size: 36px; margin-bottom: 15px; font-weight: 700;">
-            🚀 Vous avez un projet en tête ?
-        </h3>
-        <p style="color: rgba(255,255,255,0.95); font-size: 18px; max-width: 550px; margin: 0 auto 30px; line-height: 1.6;">
-            Discutons de vos idées et transformons-les en réalité digitale.<br>
-            <span style="font-size: 16px; opacity: 0.8;">Réponse sous 24h · Devis gratuit</span>
-        </p>
-        <div class="bts" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <!-- Bouton Contact -->
-            <a href="{{ route('contact') }}" class="btn" style="background: white; color: #ff6c00; padding: 14px 35px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"
-               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)';"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)';">
-                <i class="icon ion-ios-mail" style="font-size: 18px;"></i>
-                Me contacter
-            </a>
-
-            <!-- Bouton WhatsApp -->
-            <a href="https://wa.me/22366894475?text=Bonjour%20Tiefing%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20vos%20services%20et%20j%27aimerais%20discuter%20de%20mon%20projet."
-               target="_blank"
-               class="btn"
-               style="background: #25D366; color: white; padding: 14px 35px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);"
-               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(37, 211, 102, 0.4)';"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)';">
-                <i class="icon ion-logo-whatsapp" style="font-size: 20px;"></i>
-                WhatsApp
-            </a>
+    <!-- ═══════════════ PARCOURS (TIMELINE) ═══════════════ -->
+    <div class="journey-section">
+        <div class="section-header">
+            <h2>Mon parcours</h2>
+            <p>Des études à l'entrepreneuriat, en passant par la formation continue.</p>
         </div>
 
-        <!-- Petite mention de disponibilité -->
-        <p style="color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 25px;">
-            <i class="icon ion-ios-checkmark-circle" style="color: #28a745;"></i>
-            Disponible pour des missions freelance · Contactez-moi dès maintenant
-        </p>
+        <div class="timeline">
+            <!-- Item 1 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">Formation</div>
+                    <div class="timeline-title">Génie Informatique</div>
+                    <div class="timeline-desc">Diplômé en Génie Informatique, avec des formations complémentaires en Entrepreneuriat et Développement Web.</div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">Expérience</div>
+                    <div class="timeline-title">5+ ans en développement</div>
+                    <div class="timeline-desc">Développement web Full Stack, création et accompagnement d'entreprises, consultant en stratégie digitale.</div>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">Vision</div>
+                    <div class="timeline-title">Transformer l'Afrique par le digital</div>
+                    <div class="timeline-desc">Accompagner la transformation digitale des entreprises africaines, innover et créer un impact social positif.</div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- ═══════════════ INFOS & CONTACT ═══════════════ -->
+    <div class="info-section">
+        <div class="info-container">
+
+            <!-- Infos personnelles -->
+            <div class="info-card">
+                <h3>
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="color:#ff6c00; width:24px; height:24px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Informations
+                </h3>
+                <ul class="info-list">
+                    <li>
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <div>
+                            <strong>Nom complet</strong>
+                            <span>{{ $user->name ?? 'Tiefing Sangare' }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <div>
+                            <strong>Email</strong>
+                            <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                        </div>
+                    </li>
+                    @if($user->location)
+                    <li>
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <div>
+                            <strong>Localisation</strong>
+                            <span>{{ $user->location }}</span>
+                        </div>
+                    </li>
+                    @endif
+                    @if($user->company)
+                    <li>
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9v.01"></path><path d="M9 12v.01"></path><path d="M9 15v.01"></path><path d="M9 18v.01"></path></svg>
+                        <div>
+                            <strong>Entreprise</strong>
+                            <span>{{ $user->company }}</span>
+                        </div>
+                    </li>
+                    @endif
+                </ul>
+                <div class="status-badge">
+                    <span class="dot"></span> Disponible pour missions freelance
+                </div>
+            </div>
+
+            <!-- Réseaux sociaux -->
+            <div class="info-card">
+                <h3>
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="color:#ff6c00; width:24px; height:24px;">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    Me suivre
+                </h3>
+                <div class="social-links">
+                    @if($user->github)
+                        <a href="{{ $user->github }}" target="_blank" class="social-btn" style="background: #333;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                        </a>
+                    @endif
+                    @if($user->linkedin)
+                        <a href="{{ $user->linkedin }}" target="_blank" class="social-btn" style="background: #0077B5;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                    @endif
+                    @if($user->twitter)
+                        <a href="{{ $user->twitter }}" target="_blank" class="social-btn" style="background: #1DA1F2;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                    @endif
+                    @if($user->facebook)
+                        <a href="{{ $user->facebook }}" target="_blank" class="social-btn" style="background: #1877F2;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                    @endif
+                    @if($user->instagram)
+                        <a href="{{ $user->instagram }}" target="_blank" class="social-btn" style="background: #E4405F;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    @endif
+                    @if($user->youtube)
+                        <a href="{{ $user->youtube }}" target="_blank" class="social-btn" style="background: #FF0000;">
+                            <svg class="svg-icon" viewBox="0 0 24 24" style="width:24px; height:24px; fill:white;">
+                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48"></polygon>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: #64748b; font-size: 14px;">Expérience</span>
+                        <span style="color: #0f172a; font-weight: 700;">5+ ans</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f1f5f9;">
+                        <span style="color: #64748b; font-size: 14px;">Projets</span>
+                        <span style="color: #0f172a; font-weight: 700;">15+</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 15px 0;">
+                        <span style="color: #64748b; font-size: 14px;">Satisfaction</span>
+                        <span style="color: #16a34a; font-weight: 700;">100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ CTA FINAL ═══════════════ -->
+    <div class="cta-final">
+        <div class="fw">
+            <h2>Un projet en tête ?</h2>
+            <p>Discutons de vos idées et transformons-les en réalité digitale. Réponse sous 24h, devis gratuit.</p>
+            <div class="cta-buttons">
+                <a href="{{ route('contact') }}" class="btn-orange" style="background: white; color: #ff6c00 !important;">
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: #ff6c00;">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Me contacter
+                </a>
+                <a href="https://wa.me/22366894475" target="_blank" class="btn-wa">
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-<style>
-    .skill-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .social-icon:hover {
-        transform: scale(1.1);
-    }
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .animated {
-        animation: fadeInUp 0.6s ease-out;
-    }
-</style>
-
-<!-- Schema.org pour Personne -->
-
-
-@if(session('success'))
-<script>
-    // Afficher une notification de succès
-    alert("{{ session('success') }}");
-</script>
-@endif
-
 @endsection

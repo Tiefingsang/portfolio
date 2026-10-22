@@ -22,5 +22,8 @@
         "scrollbars": "^0.7.1",
         "tailwindcss": "^4.3.0",
         "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "tinymce": "^8.10.0"
     }
 }

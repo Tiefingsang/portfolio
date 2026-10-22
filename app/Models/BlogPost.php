@@ -9,17 +9,31 @@ use Illuminate\Support\Facades\Storage;
 class BlogPost extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'excerpt', 'content', 'image', 'author',
-        'views', 'is_published', 'published_at', 'meta_keywords', 'meta_description'
+        'title',
+        'slug',
+        'excerpt',
+        'content',
+        'image',
+        'author',
+        'views',
+        'is_published',
+        'is_featured',          // ✅ AJOUT
+        'published_at',
+        'meta_keywords',
+        'meta_description',
     ];
 
     protected $casts = [
         'meta_keywords' => 'array',
-        'is_published' => 'boolean',
-        'published_at' => 'datetime'
+        'is_published'  => 'boolean',
+        'is_featured'   => 'boolean',   // ✅ AJOUT
+        'published_at'  => 'datetime',
+        'views'         => 'integer',
     ];
 
-    // Auto-generate slug when creating
+    /* ============================================================
+       AUTO-GÉNÉRATION DU SLUG
+       ============================================================ */
     protected static function boot()
     {
         parent::boot();
@@ -30,31 +44,51 @@ class BlogPost extends Model
             }
         });
 
-        static::updating(function ($post) {
-            if ($post->isDirty('title') && empty($post->slug)) {
-                $post->slug = Str::slug($post->title);
-            }
-        });
+        // ⚠️ On NE régénère PAS le slug si l'utilisateur a tapé un slug manuel
+        // Le contrôleur gère déjà la logique du slug, donc ici on ne fait rien.
+        // (ancien code supprimé car il écrasait le slug manuel)
     }
 
+    /* ============================================================
+       SCOPES
+       ============================================================ */
     public function scopePublished($query)
     {
         return $query->where('is_published', true)
                      ->where('published_at', '<=', now());
     }
 
-        public function getImageUrlAttribute()
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+
+    /* ============================================================
+       ACCESSORS
+       ============================================================ */
+    public function getImageUrlAttribute(): string
     {
         if ($this->image) {
-            // Vérifier si l'image existe dans storage
             if (Storage::disk('public')->exists($this->image)) {
-                return Storage::url($this->image);
+                return Storage::disk('public')->url($this->image);
             }
-            // Si l'image est un chemin relatif
+            // Fallback si le fichier n'existe plus
             return asset('storage/' . $this->image);
         }
 
-        // Image par défaut
         return asset('images/blog-default.jpg');
+    }
+
+    public function getReadingTimeAttribute(): int
+    {
+        $text = strip_tags($this->content ?? '');
+        $words = $text ? str_word_count($text) : 0;
+        return max(1, (int) ceil($words / 200));
+    }
+
+    public function getWordCountAttribute(): int
+    {
+        $text = strip_tags($this->content ?? '');
+        return $text ? str_word_count($text) : 0;
     }
 }

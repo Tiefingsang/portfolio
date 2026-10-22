@@ -111,7 +111,7 @@
                                 </a>
 
                                 @if(!$msg->is_read)
-                                <form action="{{ route('admin.message.read', $msg->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.message.mark-read', $msg->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="text-green-600 hover:text-green-900" title="Marquer comme lu">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
