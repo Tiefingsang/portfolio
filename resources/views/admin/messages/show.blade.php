@@ -120,7 +120,8 @@
 </div>
 
 <div class="mt-6">
-    <a href="{{ route('admin.messages') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800">
+    {{-- ✅ CORRIGÉ : admin.messages.index --}}
+    <a href="{{ route('admin.messages.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
