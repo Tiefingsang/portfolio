@@ -1,17 +1,50 @@
 @extends('layouts.app')
 
 @section('title', $service->meta_title ?? $service->title . ' - Tiefing Sangare')
-@section('meta_description', $service->meta_description ?? $service->description)
+@section('meta_description', $service->meta_description ?? Str::limit(strip_tags($service->description), 160))
+@section('og_type', 'website')
+@section('og_title', $service->title)
+@section('og_description', Str::limit(strip_tags($service->description), 160))
+@section('og_image', $service->image ? asset('storage/' . $service->image) : asset('images/og-image.jpg'))
+
+@php
+    $jsonLd = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Service',
+        'name' => $service->title,
+        'description' => Str::limit(strip_tags($service->description), 160),
+        'provider' => [
+            '@type' => 'Person',
+            'name' => 'Tiefing Sangare',
+            'url' => 'https://tiefingsangare.com',
+        ],
+        'areaServed' => [
+            '@type' => 'Country',
+            'name' => 'Mali',
+        ],
+        'url' => url()->current(),
+    ];
+@endphp
+
+@push('head')
+<script type="application/ld+json">
+{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+@endpush
 
 @push('styles')
 <style>
-    /* ── ANTI-CONFLIT & BASE ── */
+    /* ═══════════════════════════════════════════════
+       ANTI-CONFLIT & BASE
+    ═══════════════════════════════════════════════ */
     .service-wrapper, .service-wrapper * {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         box-sizing: border-box;
     }
 
-    /* ── HERO SECTION ── */
+    /* ═══════════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════════ */
     .service-hero {
         background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.75) 100%), url('{{ asset('images/t1.jpg') }}');
         background-size: cover;
@@ -56,7 +89,9 @@
         line-height: 1.6;
     }
 
-    /* ── CONTENU PRINCIPAL ── */
+    /* ═══════════════════════════════════════════════
+       CONTENU PRINCIPAL
+    ═══════════════════════════════════════════════ */
     .service-content-section {
         background: #fff;
         padding: 80px 20px;
@@ -219,7 +254,9 @@
     }
     .contact-card .btn-wa:hover { transform: scale(1.05); }
 
-    /* ── SECTION AUTRES SERVICES ── */
+    /* ═══════════════════════════════════════════════
+       SECTION AUTRES SERVICES
+    ═══════════════════════════════════════════════ */
     .related-services {
         background: #f8fafc;
         padding: 80px 20px;
@@ -283,7 +320,9 @@
     }
     .related-card a:hover { gap: 10px; }
 
-    /* ── CTA FINAL ── */
+    /* ═══════════════════════════════════════════════
+       CTA FINAL
+    ═══════════════════════════════════════════════ */
     .final-cta {
         background: linear-gradient(135deg, #ff6c00, #e05a00);
         padding: 80px 20px;
@@ -355,7 +394,10 @@
                 @if($service->button_link)
                     <a href="{{ $service->button_link }}" class="service-cta-btn">
                         {{ $service->button_text ?? 'En savoir plus' }}
-                        <i class="icon ion-ios-arrow-forward"></i>
+                        <svg viewBox="0 0 24 24" style="width:18px; height:18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
                 @endif
             </div>
@@ -404,7 +446,10 @@
                         <a href="{{ route('contact') }}" class="btn-main">Me contacter</a>
                         <a href="https://wa.me/22366894475?text=Bonjour%20Tiefing%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20service%20{{ urlencode($service->title) }}"
                            target="_blank" class="btn-wa">
-                            <i class="icon ion-logo-whatsapp"></i> WhatsApp
+                            <svg viewBox="0 0 24 24" style="width:16px; height:16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                            </svg>
+                            WhatsApp
                         </a>
                     </div>
                 </div>
@@ -426,7 +471,11 @@
                     <h3>{{ $related->title }}</h3>
                     <p>{{ Str::limit($related->description, 90) }}</p>
                     <a href="{{ route('services.show', $related->slug) }}">
-                        En savoir plus <i class="icon ion-ios-arrow-forward"></i>
+                        En savoir plus
+                        <svg viewBox="0 0 24 24" style="width:16px; height:16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
                 </div>
                 @endforeach
