@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <!-- Messages -->
+        <!-- Messages (CORRIGÉ) -->
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -67,7 +67,8 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.messages') }}" class="text-yellow-600 text-sm hover:text-yellow-800 flex items-center gap-1">
+                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
+                <a href="{{ route('admin.messages.index') }}" class="text-yellow-600 text-sm hover:text-yellow-800 flex items-center gap-1">
                     Voir les messages
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -76,7 +77,7 @@
             </div>
         </div>
 
-        <!-- Non lus -->
+        <!-- Non lus (CORRIGÉ) -->
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -90,7 +91,8 @@
                 </div>
             </div>
             <div class="mt-4">
-                <a href="{{ route('admin.messages') }}" class="text-red-600 text-sm hover:text-red-800 flex items-center gap-1">
+                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
+                <a href="{{ route('admin.messages.index') }}" class="text-red-600 text-sm hover:text-red-800 flex items-center gap-1">
                     Lire les messages
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -152,7 +154,8 @@
                 @endforelse
             </div>
             <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
-                <a href="{{ route('admin.messages') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
+                <a href="{{ route('admin.messages.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
                     Voir tous les messages
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -255,7 +258,8 @@
                     <span class="text-sm font-medium text-gray-700">Nouvel article</span>
                 </a>
 
-                <a href="{{ route('admin.messages') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-yellow-50 to-white rounded-xl hover:shadow-md transition-all group">
+                {{-- ✅ CORRIGÉ : admin.messages.index au lieu de admin.messages --}}
+                <a href="{{ route('admin.messages.index') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-yellow-50 to-white rounded-xl hover:shadow-md transition-all group">
                     <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
