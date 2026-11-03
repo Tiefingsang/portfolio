@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'automated_blog' => [
+        'token' => env('AUTOMATED_BLOG_TOKEN'),
+    ],
+
 ];

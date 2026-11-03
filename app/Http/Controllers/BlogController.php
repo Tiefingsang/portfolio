@@ -21,9 +21,9 @@ class BlogController extends Controller
 
     public function show($slug)
     {
-        $post = BlogPost::where('slug', $slug)
-            ->where('is_published', true)
-            ->firstOrFail();
+        $post = BlogPost::published()
+        ->where('slug', $slug)
+        ->firstOrFail();
 
         // Incrémenter les vues
         $post->increment('views');
