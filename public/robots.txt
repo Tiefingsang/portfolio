@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Bloquer les pages admin et login
+Disallow: /admin/
+Disallow: /login
+
+# Sitemap
+Sitemap: https://tiefingsangare.com/sitemap.xml

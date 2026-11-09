@@ -15,6 +15,10 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PricingController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\ProcessController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 /* ============================================================
    FRONTEND
@@ -34,6 +38,13 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
+
+
+Route::get('/process', [ProcessController::class, 'index'])->name('process');
+
+
+
+Route::get('/tarifs', [PricingController::class, 'index'])->name('pricing');
 /* ============================================================
    SEO
    ============================================================ */
@@ -41,6 +52,22 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index']);
 Route::get('/robots.txt', function () {
     return response()->view('robots', [], 200)->header('Content-Type', 'text/plain');
 });
+
+
+
+Route::get('/masasugu', function () {
+    return view('pages.masasugu');
+})->name('masasugu');
+
+// Route::get('/masadigitale', function () {
+//     return view('pages.masadigitale');
+// })->name('masadigitale');
+
+// Route::get('/reversible', function () {
+//     return view('pages.reversible');
+// })->name('reversible');
+
+
 
 /* ============================================================
    ADMIN — AUTHENTIFICATION
@@ -100,6 +127,27 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     /* ---------- Profile ---------- */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
+
+
+    /* ---------- Testimonials ---------- */
+    Route::get('/testimonials', [AdminTestimonialController::class, 'index'])->name('admin.testimonials.index');
+    Route::get('/testimonials/create', [AdminTestimonialController::class, 'create'])->name('admin.testimonials.create');
+    Route::post('/testimonials', [AdminTestimonialController::class, 'store'])->name('admin.testimonials.store');
+    Route::get('/testimonials/{id}/edit', [AdminTestimonialController::class, 'edit'])->name('admin.testimonials.edit');
+    Route::put('/testimonials/{id}', [AdminTestimonialController::class, 'update'])->name('admin.testimonials.update');
+    Route::delete('/testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('admin.testimonials.destroy');
+
+
+
+
+    /* ---------- Categories ---------- */
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('admin.categories.index');
+    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
+    Route::get('/blog/categorie/{slug}', [BlogController::class, 'category'])->name('blog.category');
 });
 
 /* ============================================================

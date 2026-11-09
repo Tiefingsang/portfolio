@@ -4,22 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
     protected $fillable = [
         'title', 'slug', 'description', 'image', 'technologies',
         'client', 'project_url', 'order', 'is_featured', 'is_active',
-        'meta_keywords', 'meta_description'
+        'meta_keywords', 'meta_description',
+        // Nouveaux champs pour les études de cas
+        'client_name', 'client_industry', 'problem', 'process', 'solution',
+        'results', 'metrics', 'testimonial', 'testimonial_author', 'case_study_image',
     ];
 
     protected $casts = [
         'meta_keywords' => 'array',
-        'is_featured' => 'boolean',
-        'is_active' => 'boolean'
+        'is_featured'   => 'boolean',
+        'is_active'     => 'boolean',
+        'metrics'       => 'array',
+        'order'         => 'integer',
     ];
 
-    // Auto-generate slug when creating
+    // Auto-génération du slug
     protected static function boot()
     {
         parent::boot();
@@ -37,8 +43,21 @@ class Project extends Model
         });
     }
 
-    public function getImageUrlAttribute()
+    // Accessor image simple
+    public function getImageUrlAttribute(): string
     {
-        return $this->image ? asset('storage/' . $this->image) : null;
+        if ($this->image && Storage::disk('public')->exists($this->image)) {
+            return Storage::url($this->image);
+        }
+        return asset('images/t1.jpg');
+    }
+
+    // Accessor image étude de cas (fallback sur image principale)
+    public function getCaseStudyImageUrlAttribute(): ?string
+    {
+        if ($this->case_study_image && Storage::disk('public')->exists($this->case_study_image)) {
+            return Storage::url($this->case_study_image);
+        }
+        return $this->image_url;
     }
 }

@@ -7,38 +7,43 @@ use App\Models\User;
 use App\Models\BlogPost;
 use App\Models\SeoSetting;
 use App\Models\Service;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Testimonial;
 use stdClass;
-use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
-    public function index(){
-        // Récupérer TOUS les projets (pas seulement les featured)
+    public function index()
+    {
+        // ═══════════════════════════════════════════════
+        // PROJETS
+        // ═══════════════════════════════════════════════
         $projects = Project::where('is_active', true)
             ->orderBy('order')
             ->get();
 
-        // Récupérer les projets en avant pour la section featured
         $featuredProjects = Project::where('is_active', true)
             ->where('is_featured', true)
             ->orderBy('order')
             ->limit(6)
             ->get();
 
-        // Récupérer les derniers articles
+        // ═══════════════════════════════════════════════
+        // ARTICLES DE BLOG (3 derniers)
+        // ═══════════════════════════════════════════════
         $posts = BlogPost::where('is_published', true)
             ->where('published_at', '<=', now())
             ->orderBy('published_at', 'desc')
             ->limit(3)
             ->get();
 
-        // Récupérer TOUS les services
+        // ═══════════════════════════════════════════════
+        // SERVICES — avec fallback par défaut
+        // ═══════════════════════════════════════════════
         $servicesData = Service::where('is_active', true)
             ->orderBy('order')
+            ->limit(6)
             ->get();
 
-        // Créer une nouvelle collection pour les services
         $services = collect();
 
         if ($servicesData->isNotEmpty()) {
@@ -47,11 +52,11 @@ class HomeController extends Controller
                 $newService->icon = $service->icon;
                 $newService->title = $service->title;
                 $newService->description = $service->description;
+                $newService->slug = $service->slug ?? null;
                 $newService->icon_class = $this->getIconClass($service->title);
                 $services->push($newService);
             }
         } else {
-            // Données par défaut
             $defaultServices = [
                 ['icon' => '🌐', 'title' => 'Sites Web', 'description' => 'Création de sites vitrine, e-commerce et applications web sur mesure avec SEO intégré.', 'icon_class' => 'ion-ios-browsers-outline'],
                 ['icon' => '📱', 'title' => 'Apps Mobiles', 'description' => 'Applications iOS et Android natives ou cross-platform (Flutter, React Native).', 'icon_class' => 'ion-social-android-outline'],
@@ -66,20 +71,32 @@ class HomeController extends Controller
                 $newService->icon = $default['icon'];
                 $newService->title = $default['title'];
                 $newService->description = $default['description'];
+                $newService->slug = null;
                 $newService->icon_class = $default['icon_class'];
                 $services->push($newService);
             }
         }
 
-        // Statistiques
+        // ═══════════════════════════════════════════════
+        // TÉMOIGNAGES CLIENTS
+        // ═══════════════════════════════════════════════
+        $testimonials = Testimonial::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        // ═══════════════════════════════════════════════
+        // STATISTIQUES
+        // ═══════════════════════════════════════════════
         $stats = [
             'projects_count' => Project::where('is_active', true)->count(),
-            'clients_count' => Project::whereNotNull('client')->distinct('client')->count('client'),
-            'support' => '24/7',
-            'seo_optimized' => '100%'
+            'clients_count'  => Project::whereNotNull('client')->distinct('client')->count('client'),
+            'support'        => '24/7',
+            'seo_optimized'  => '100%',
         ];
 
-        // Récupérer les données SEO
+        // ═══════════════════════════════════════════════
+        // SEO
+        // ═══════════════════════════════════════════════
         $seoData = SeoSetting::where('page', 'home')->first();
 
         $seo = new stdClass();
@@ -91,16 +108,17 @@ class HomeController extends Controller
             $seo->description = 'Développeur web et agence digitale basé à Bamako, Mali. Création de sites web, applications mobiles, IA WhatsApp et solutions digitales sur mesure.';
         }
 
-                $user = User::where('email', 'tiefingsangare86@gmail.com')->first();
+        // ═══════════════════════════════════════════════
+        // UTILISATEUR
+        // ═══════════════════════════════════════════════
+        $user = User::where('email', 'tiefingsangare86@gmail.com')->first();
 
-        // Si l'utilisateur n'est pas trouvé, prendre le premier utilisateur
         if (!$user) {
             $user = User::first();
         }
 
-        // Si toujours pas d'utilisateur, créer un objet par défaut
         if (!$user) {
-            $user = new \stdClass();
+            $user = new stdClass();
             $user->name = 'Tiefing Sangare';
             $user->title = 'Développeur Full Stack & Expert SEO';
             $user->bio = 'Développeur web passionné et entrepreneur digital basé à Bamako, Mali.';
@@ -112,39 +130,42 @@ class HomeController extends Controller
             $user->avatar = null;
             $user->cv_url = null;
             $user->resume_url = null;
+            $user->github = null;
+            $user->linkedin = null;
+            $user->twitter = null;
+            $user->facebook = null;
+            $user->instagram = null;
+            $user->youtube = null;
         }
 
-        // Récupérer les services
-        $services = Service::where('is_active', true)
-            ->orderBy('order', 'asc')
-            ->limit(6)
-            ->get();
-
-        // Récupérer les articles de blog
-        $posts = BlogPost::where('is_published', true)
-            ->orderBy('created_at', 'desc')
-            ->limit(3)
-            ->get();
-
-        // Passer toutes les variables à la vue
-        return view('pages.home', compact('projects', 'featuredProjects', 'posts', 'services', 'stats', 'seo', 'user'));
+        return view('pages.home', compact(
+            'projects',
+            'featuredProjects',
+            'posts',
+            'services',
+            'testimonials',
+            'stats',
+            'seo',
+            'user'
+        ));
     }
 
-    private function getIconClass($title){
+    private function getIconClass($title)
+    {
         $icons = [
-            'Site' => 'ion-ios-browsers-outline',
-            'Web' => 'ion-ios-browsers-outline',
-            'Mobile' => 'ion-social-android-outline',
-            'App' => 'ion-social-android-outline',
-            'IA' => 'ion-ios-chatbubble-outline',
-            'WhatsApp' => 'ion-ios-chatbubble-outline',
-            'SEO' => 'ion-ios-analytics-outline',
+            'Site'        => 'ion-ios-browsers-outline',
+            'Web'         => 'ion-ios-browsers-outline',
+            'Mobile'      => 'ion-social-android-outline',
+            'App'         => 'ion-social-android-outline',
+            'IA'          => 'ion-ios-chatbubble-outline',
+            'WhatsApp'    => 'ion-ios-chatbubble-outline',
+            'SEO'         => 'ion-ios-analytics-outline',
             'Référencement' => 'ion-ios-analytics-outline',
-            'UI' => 'ion-ios-color-wand-outline',
-            'UX' => 'ion-ios-color-wand-outline',
-            'Design' => 'ion-ios-color-wand-outline',
+            'UI'          => 'ion-ios-color-wand-outline',
+            'UX'          => 'ion-ios-color-wand-outline',
+            'Design'      => 'ion-ios-color-wand-outline',
             'Maintenance' => 'ion-ios-settings',
-            'Support' => 'ion-ios-settings',
+            'Support'     => 'ion-ios-settings',
         ];
 
         foreach ($icons as $key => $icon) {
@@ -156,24 +177,9 @@ class HomeController extends Controller
         return 'ion-ios-browsers-outline';
     }
 
-    // public function contact()
-    // {
-    //     return view('pages.contact');
-    // }
-
-
-    // public function about()
-    // {
-    //     return view('pages.about');
-    // }
-
     public function serviceIndex()
     {
-        //$services = $this->getServices();
-        $services = Service::get();
-        //dd($services);
+        $services = Service::all();
         return view('pages.services', compact('services'));
     }
-
-
 }

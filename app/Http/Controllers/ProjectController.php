@@ -11,7 +11,7 @@ class ProjectController extends Controller
         $projects = Project::where('is_active', true)
             ->orderBy('order')
             ->paginate(9);
-       // dd($projects);
+
         return view('pages.projects.index', compact('projects'));
     }
 
@@ -23,6 +23,7 @@ class ProjectController extends Controller
 
         $otherProjects = Project::where('is_active', true)
             ->where('id', '!=', $project->id)
+            ->orderBy('order')
             ->limit(3)
             ->get();
 

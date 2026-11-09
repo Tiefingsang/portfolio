@@ -116,7 +116,7 @@
         transform: scale(1.08);
     }
     .project-img::after {
-        content: 'Voir le projet';
+        content: 'Voir l\'étude de cas →';
         position: absolute;
         inset: 0;
         background: rgba(15, 23, 42, 0.7);
@@ -162,136 +162,19 @@
         margin-bottom: 20px;
         flex: 1;
     }
-
-    /* ═══════════════════════════════════════════════
-       OVERRIDE MAGNIFIC POPUP (Agrandissement & Croix Fixe)
-    ═══════════════════════════════════════════════ */
-
-    .mfp-bg {
-        background: rgba(15, 23, 42, 0.9) !important;
-        backdrop-filter: blur(8px);
-        opacity: 1 !important;
-    }
-
-    /* Autorise la croix à sortir du cadre */
-    .mfp-wrap {
-        overflow: visible !important;
-    }
-
-    /* Conteneur de la popup */
-    .mfp-content .popup-box {
-        background: white;
-        border-radius: 24px;
-        overflow: visible !important;
-        width: 95%;
-        max-width: 1100px;
-        margin: 0 auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        position: relative;
-    }
-
-    /* Image de la popup */
-    .mfp-content .popup-box .image {
-        overflow: hidden;
-        border-radius: 24px 24px 0 0;
-    }
-    .mfp-content .popup-box .image img {
-        width: 100%;
-        max-height: 500px;
-        object-fit: cover;
-        display: block;
-    }
-
-    /* Contenu texte */
-    .mfp-content .popup-box .desc {
-        padding: 40px 50px;
-    }
-
-    .mfp-content .popup-box .desc h4 {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 20px;
-        line-height: 1.2;
-    }
-
-    .mfp-content .popup-box .desc p {
-        color: #475569;
-        font-size: 16px;
-        line-height: 1.7;
-        margin-bottom: 15px;
-    }
-
-    .mfp-content .popup-box .desc .btn {
-        display: inline-block;
-        background: #ff6c00;
-        color: white !important;
-        padding: 12px 30px;
-        border-radius: 30px;
-        text-decoration: none;
+    .project-link {
+        color: #ff6c00;
         font-weight: 600;
-        margin-top: 20px;
-        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        transition: gap 0.2s;
+        margin-top: auto;
     }
-    .mfp-content .popup-box .desc .btn:hover {
-        background: #e05a00;
-        transform: translateY(-2px);
-    }
-
-    /* ═══════════════════════════════════════════════
-       BOUTON FERMER (LA CROIX) - VISIBLE EN HAUT À DROITE
-    ═══════════════════════════════════════════════ */
-
-    .mfp-close {
-        color: #ffffff !important;
-        opacity: 1 !important;
-        font-size: 28px !important;
-        font-family: Arial, sans-serif !important;
-        width: 44px !important;
-        height: 44px !important;
-        line-height: 44px !important;
-        padding: 0 !important;
-        top: 20px !important;       /* Fixé en haut à droite de l'écran */
-        right: 20px !important;
-        left: auto !important;
-        bottom: auto !important;
-        background: rgba(0, 0, 0, 0.6) !important;   /* Fond sombre pour bien ressortir */
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 50% !important;
-        transition: all 0.3s ease !important;
-        text-shadow: none !important;
-        text-decoration: none !important;
-        z-index: 99999 !important;   /* Au-dessus de tout */
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        position: fixed !important;  /* Reste visible même si on scrolle dans la popup */
-    }
-
-    .mfp-close:hover,
-    .mfp-close:focus {
-        background: #ff6c00 !important;
-        transform: rotate(90deg);
-        border-color: #ff6c00 !important;
-        opacity: 1 !important;
-    }
-
-    /* Ajustement mobile */
-    @media (max-width: 768px) {
-        .mfp-close {
-            top: 10px !important;
-            right: 10px !important;
-            width: 40px !important;
-            height: 40px !important;
-            line-height: 40px !important;
-            font-size: 24px !important;
-        }
-        .mfp-content .popup-box .desc {
-            padding: 25px;
-        }
-        .mfp-content .popup-box .desc h4 {
-            font-size: 1.6rem;
-        }
+    .project-link:hover {
+        gap: 10px;
     }
 </style>
 @endpush
@@ -326,7 +209,8 @@
             <div class="works-grid" id="projects-grid">
                 @forelse($projects as $project)
                     <div class="project-card" data-category="f-{{ Str::slug($project->category ?? 'projet') }}">
-                        <a href="#popup-{{ $project->id }}" class="has-popup project-img">
+                        {{-- Lien vers l'étude de cas dédiée --}}
+                        <a href="{{ route('project.show', $project->slug) }}" class="project-img">
                             @if($project->image)
                                 <img src="{{ $project->image_url }}" alt="{{ $project->title }}">
                             @else
@@ -335,32 +219,19 @@
                         </a>
                         <div class="project-info">
                             <div class="project-category">{{ $project->category ?? 'Projet' }}</div>
-                            <a href="#popup-{{ $project->id }}" class="has-popup" style="text-decoration:none;">
+                            <a href="{{ route('project.show', $project->slug) }}" style="text-decoration:none;">
                                 <h3 class="project-title">{{ $project->title }}</h3>
                             </a>
                             <p class="project-desc">{{ Str::limit($project->description, 100) }}</p>
-                        </div>
-                    </div>
 
-                    <!-- POPUP pour Magnific -->
-                    <div id="popup-{{ $project->id }}" class="popup-box mfp-fade mfp-hide">
-                        <div class="content">
-                            <div class="image">
-                                @if($project->image)
-                                    <img src="{{ $project->image_url }}" alt="{{ $project->title }}">
-                                @endif
-                            </div>
-                            <div class="desc">
-                                <div class="category" style="color: #ff6c00; font-weight: 700; text-transform: uppercase; font-size: 12px; margin-bottom: 10px;">{{ $project->category ?? 'Projet' }}</div>
-                                <h4>{{ $project->title }}</h4>
-                                <p>{{ $project->description }}</p>
-                                @if($project->technologies)
-                                    <p><strong>Technologies :</strong> {{ $project->technologies }}</p>
-                                @endif
-                                @if($project->project_url)
-                                    <a href="{{ $project->project_url }}" target="_blank" class="btn">Voir le projet en ligne</a>
-                                @endif
-                            </div>
+                            {{-- CTA vers l'étude de cas --}}
+                            <a href="{{ route('project.show', $project->slug) }}" class="project-link">
+                                Voir l'étude de cas
+                                <svg viewBox="0 0 24 24" style="width:16px; height:16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 @empty
@@ -379,15 +250,13 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // ── GESTION DES FILTRES (Vanilla JS) ──
+        // ── GESTION DES FILTRES ──
         const filterBtns = document.querySelectorAll('.filter-btn');
         const projectCards = document.querySelectorAll('.project-card');
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Retirer la classe active de tous les boutons
                 filterBtns.forEach(b => b.classList.remove('active'));
-                // Ajouter la classe active au bouton cliqué
                 btn.classList.add('active');
 
                 const filterValue = btn.getAttribute('data-filter');
@@ -395,7 +264,6 @@
                 projectCards.forEach(card => {
                     if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
                         card.style.display = 'flex';
-                        // Petite animation d'apparition
                         card.style.opacity = '0';
                         card.style.transform = 'translateY(20px)';
                         setTimeout(() => {

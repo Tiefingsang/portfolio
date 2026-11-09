@@ -17,23 +17,25 @@ class BlogPost extends Model
         'author',
         'views',
         'is_published',
-        'is_featured',          // ✅ AJOUT
+        'is_featured',
         'published_at',
         'meta_keywords',
         'meta_description',
+        'meta_title',     
+        'category',        
+        'tags',            
+        'category_id',
     ];
 
     protected $casts = [
         'meta_keywords' => 'array',
         'is_published'  => 'boolean',
-        'is_featured'   => 'boolean',   // ✅ AJOUT
+        'is_featured'   => 'boolean',
         'published_at'  => 'datetime',
         'views'         => 'integer',
+        'tags'          => 'array',  
     ];
 
-    /* ============================================================
-       AUTO-GÉNÉRATION DU SLUG
-       ============================================================ */
     protected static function boot()
     {
         parent::boot();
@@ -43,15 +45,8 @@ class BlogPost extends Model
                 $post->slug = Str::slug($post->title);
             }
         });
-
-        // ⚠️ On NE régénère PAS le slug si l'utilisateur a tapé un slug manuel
-        // Le contrôleur gère déjà la logique du slug, donc ici on ne fait rien.
-        // (ancien code supprimé car il écrasait le slug manuel)
     }
 
-    /* ============================================================
-       SCOPES
-       ============================================================ */
     public function scopePublished($query)
     {
         return $query->where('is_published', true)
@@ -63,19 +58,14 @@ class BlogPost extends Model
         return $query->where('is_featured', true);
     }
 
-    /* ============================================================
-       ACCESSORS
-       ============================================================ */
     public function getImageUrlAttribute(): string
     {
         if ($this->image) {
             if (Storage::disk('public')->exists($this->image)) {
                 return Storage::disk('public')->url($this->image);
             }
-            // Fallback si le fichier n'existe plus
             return asset('storage/' . $this->image);
         }
-
         return asset('images/blog-default.jpg');
     }
 
@@ -90,5 +80,10 @@ class BlogPost extends Model
     {
         $text = strip_tags($this->content ?? '');
         return $text ? str_word_count($text) : 0;
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

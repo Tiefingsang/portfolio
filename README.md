@@ -86,3 +86,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ┌──[tiefing @ Tiefingsang]
 └──[~/portfolio-tiefing] $ php -r "echo bin2hex(random_bytes(32)).PHP_EOL;"
 5e88d3e1e38e834f3b52452c10f27f91473e0d8ac9553edd20b18981469dc33d
+
+
+
+

@@ -12,4 +12,5 @@
         <a target="_blank" href="https://www.tiktok.com/@tiefingsangare?_r=1&_t=ZN-98yynm9WeVa"><i class="fab fa-tiktok"></i></a>
         <a target="_blank" href="https://wa.me/22366894475"><i class="icon ion ion-social-whatsapp"></i></a>
     </div>
+    <span class="logo-tagline">&lt;/ Code Your Life &gt;</span>
 </footer>

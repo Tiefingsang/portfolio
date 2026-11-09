@@ -5,13 +5,17 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Projets -->
+
+    {{-- ═══════════════════════════════════════════════
+         STATISTIQUES (5 cartes)
+    ═══════════════════════════════════════════════ --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+
+        {{-- Projets --}}
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Total Projets</p>
+                    <p class="text-gray-500 text-sm font-medium">Projets</p>
                     <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['projects'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -22,7 +26,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.projects.index') }}" class="text-blue-600 text-sm hover:text-blue-800 flex items-center gap-1">
-                    Gérer les projets
+                    Gérer
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -30,11 +34,11 @@
             </div>
         </div>
 
-        <!-- Articles -->
+        {{-- Articles --}}
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Articles Blog</p>
+                    <p class="text-gray-500 text-sm font-medium">Articles</p>
                     <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['blog_posts'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -45,7 +49,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.blog.index') }}" class="text-green-600 text-sm hover:text-green-800 flex items-center gap-1">
-                    Gérer les articles
+                    Gérer
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -53,7 +57,7 @@
             </div>
         </div>
 
-        <!-- Messages (CORRIGÉ) -->
+        {{-- Messages --}}
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
@@ -67,9 +71,8 @@
                 </div>
             </div>
             <div class="mt-4">
-                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
                 <a href="{{ route('admin.messages.index') }}" class="text-yellow-600 text-sm hover:text-yellow-800 flex items-center gap-1">
-                    Voir les messages
+                    Voir
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -77,11 +80,11 @@
             </div>
         </div>
 
-        <!-- Non lus (CORRIGÉ) -->
+        {{-- Non lus --}}
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition-shadow">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Messages non lus</p>
+                    <p class="text-gray-500 text-sm font-medium">Non lus</p>
                     <p class="text-3xl font-bold text-red-600 mt-1">{{ $stats['unread_messages'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
@@ -91,9 +94,32 @@
                 </div>
             </div>
             <div class="mt-4">
-                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
                 <a href="{{ route('admin.messages.index') }}" class="text-red-600 text-sm hover:text-red-800 flex items-center gap-1">
-                    Lire les messages
+                    Lire
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        {{-- Témoignages --}}
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Témoignages</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">{{ $stats['testimonials'] }}</p>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ route('admin.testimonials.index') }}" class="text-purple-600 text-sm hover:text-purple-800 flex items-center gap-1">
+                    Gérer
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -102,9 +128,12 @@
         </div>
     </div>
 
-    <!-- Recent Data Section -->
+    {{-- ═══════════════════════════════════════════════
+         DONNÉES RÉCENTES
+    ═══════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Recent Messages -->
+
+        {{-- Messages récents --}}
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -112,7 +141,7 @@
                         <h3 class="text-lg font-semibold text-gray-800">📬 Messages récents</h3>
                         <p class="text-sm text-gray-500 mt-1">Derniers messages reçus</p>
                     </div>
-                    <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">{{ $recentMessages->count() }} nouveau(x)</span>
+                    <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">{{ $recentMessages->count() }}</span>
                 </div>
             </div>
             <div class="divide-y divide-gray-100">
@@ -154,7 +183,6 @@
                 @endforelse
             </div>
             <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
-                {{-- ✅ admin.messages.index au lieu de admin.messages --}}
                 <a href="{{ route('admin.messages.index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
                     Voir tous les messages
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +192,7 @@
             </div>
         </div>
 
-        <!-- Recent Projects -->
+        {{-- Projets récents --}}
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -172,7 +200,7 @@
                         <h3 class="text-lg font-semibold text-gray-800">🚀 Projets récents</h3>
                         <p class="text-sm text-gray-500 mt-1">Derniers projets ajoutés</p>
                     </div>
-                    <span class="bg-green-100 text-green-600 text-xs font-semibold px-3 py-1 rounded-full">{{ $recentProjects->count() }} projet(s)</span>
+                    <span class="bg-green-100 text-green-600 text-xs font-semibold px-3 py-1 rounded-full">{{ $recentProjects->count() }}</span>
                 </div>
             </div>
             <div class="divide-y divide-gray-100">
@@ -190,19 +218,9 @@
                                     @endforeach
                                 @endif
                                 @if($project->is_active)
-                                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded flex items-center gap-1">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        Actif
-                                    </span>
+                                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">Actif</span>
                                 @else
-                                    <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded flex items-center gap-1">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        Inactif
-                                    </span>
+                                    <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Inactif</span>
                                 @endif
                             </div>
                         </div>
@@ -233,20 +251,23 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
+    {{-- ═══════════════════════════════════════════════
+         ACTIONS RAPIDES
+    ═══════════════════════════════════════════════ --}}
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-800">⚡ Actions rapides</h3>
         </div>
         <div class="px-6 py-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+
                 <a href="{{ route('admin.projects.create') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-blue-50 to-white rounded-xl hover:shadow-md transition-all group">
                     <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700">Nouveau projet</span>
+                    <span class="text-sm font-medium text-gray-700 text-center">Nouveau projet</span>
                 </a>
 
                 <a href="{{ route('admin.blog.create') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-green-50 to-white rounded-xl hover:shadow-md transition-all group">
@@ -255,17 +276,26 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700">Nouvel article</span>
+                    <span class="text-sm font-medium text-gray-700 text-center">Nouvel article</span>
                 </a>
 
-                {{-- ✅ CORRIGÉ : admin.messages.index au lieu de admin.messages --}}
+                <a href="{{ route('admin.testimonials.create') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-purple-50 to-white rounded-xl hover:shadow-md transition-all group">
+                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 text-center">Nouveau témoignage</span>
+                </a>
+
                 <a href="{{ route('admin.messages.index') }}" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-yellow-50 to-white rounded-xl hover:shadow-md transition-all group">
                     <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700">
+                    <span class="text-sm font-medium text-gray-700 text-center">
                         Messages
                         @if($stats['unread_messages'] > 0)
                             <span class="ml-1 bg-red-500 text-white text-xs px-1 rounded">{{ $stats['unread_messages'] }}</span>
@@ -273,13 +303,13 @@
                     </span>
                 </a>
 
-                <a href="{{ route('home') }}" target="_blank" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-purple-50 to-white rounded-xl hover:shadow-md transition-all group">
-                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <a href="{{ route('home') }}" target="_blank" class="flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-gray-50 to-white rounded-xl hover:shadow-md transition-all group">
+                    <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700">Voir le site</span>
+                    <span class="text-sm font-medium text-gray-700 text-center">Voir le site</span>
                 </a>
             </div>
         </div>

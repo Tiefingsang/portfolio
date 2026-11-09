@@ -24,7 +24,8 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technologies</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Étude de cas</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ordre</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -45,20 +46,27 @@
                             </div>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">{{ $project->title }}</div>
                         <div class="text-xs text-gray-500 mt-1">{{ Str::limit($project->description, 50) }}</div>
                     </td>
-                    <td class="px-6 py-4">
-                        <div class="flex flex-wrap gap-1">
-                            @php $techs = explode(',', $project->technologies ?? '') @endphp
-                            @foreach(array_slice($techs, 0, 2) as $tech)
-                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">{{ trim($tech) }}</span>
-                            @endforeach
-                            @if(count($techs) > 2)
-                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">+{{ count($techs) - 2 }}</span>
-                            @endif
-                        </div>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($project->category)
+                            <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">{{ $project->category }}</span>
+                        @else
+                            <span class="text-xs text-gray-400">—</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($project->problem && $project->process && $project->solution)
+                            <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
+                                ✅ Complète
+                            </span>
+                        @else
+                            <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                ⚠️ Incomplète
+                            </span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-500">{{ $project->order }}</div>
@@ -66,18 +74,12 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex flex-col gap-1">
                             @if($project->is_active)
-                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
-                                    ✅ Actif
-                                </span>
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">✅ Actif</span>
                             @else
-                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                    ⚪ Inactif
-                                </span>
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-gray-100 text-gray-800">⚪ Inactif</span>
                             @endif
                             @if($project->is_featured)
-                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    ⭐ En vedette
-                                </span>
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-yellow-100 text-yellow-800">⭐ En vedette</span>
                             @endif
                         </div>
                     </td>
@@ -108,7 +110,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                    <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                         <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                         </svg>
