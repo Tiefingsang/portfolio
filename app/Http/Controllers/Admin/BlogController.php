@@ -39,7 +39,7 @@ class BlogController extends Controller
             ->limit(5)
             ->get();
 
-        return view('pages.blog.index', compact('posts', 'categories', 'latestPosts'));
+        return view('admin.blog.index', compact('posts', 'categories', 'latestPosts'));
     }
 
     public function category($slug)

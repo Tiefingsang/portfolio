@@ -482,6 +482,10 @@
 
                 <form id="contact-form" method="POST" action="{{ route('contact.send') }}">
                     @csrf
+
+                    <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                        <input type="text" name="website" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="name">Nom complet *</label>

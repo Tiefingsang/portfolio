@@ -10,10 +10,10 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!auth()->check()) {
-            return redirect('/admin/login');
+            return redirect()->route('admin.login');
         }
 
-        if (auth()->user()->email !== 'tiefingsangare86@gmail.com') {
+        if (!auth()->user()->is_admin) {
             abort(403, 'Accès non autorisé.');
         }
 

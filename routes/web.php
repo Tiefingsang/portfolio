@@ -30,10 +30,14 @@ Route::get('/realisations', [ProjectController::class, 'index'])->name('projects
 Route::get('/realisations/{slug}', [ProjectController::class, 'show'])->name('project.show');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/categorie/{slug}', [BlogController::class, 'category'])->name('blog.category');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
+
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/contact', [ContactController::class, 'send'])
+    ->name('contact.send')
+    ->middleware('throttle:3,1');
 
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
@@ -74,7 +78,9 @@ Route::get('/masasugu', function () {
    ============================================================ */
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('admin.login.submit')
+        ->middleware('throttle:5,1');   // 5 tentatives / minute / IP
     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 });
 
@@ -147,7 +153,7 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::get('/categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('admin.categories.edit');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('admin.categories.destroy');
-    Route::get('/blog/categorie/{slug}', [BlogController::class, 'category'])->name('blog.category');
+
 });
 
 /* ============================================================
