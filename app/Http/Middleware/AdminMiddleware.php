@@ -13,8 +13,8 @@ class AdminMiddleware
             return redirect()->route('admin.login');
         }
 
-        if (!auth()->user()->is_admin) {
-            abort(403, 'Accès non autorisé.');
+        if (!auth()->check()) {
+            return redirect()->route('admin.login'); // ✅ Ça, c'est bon
         }
 
         return $next($request);
